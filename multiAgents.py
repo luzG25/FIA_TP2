@@ -92,17 +92,25 @@ class ReflexAgent(Agent):
                 return score
             
         if newPos in oldFood: 
+            # se a nova posicao possui comida
             score += 50
 
         if oldPos == newPos:
+            # se a proxima acao levar o pacman a posicao onde ele esta atualmente
             score -= 20
 
-        newFood_distancia = []
-        if len(oldFood) > 0:
+        newFood_distance = [] # armazenar a distancia para cada comida
+
+        if len(oldFood) > 0: 
+            # caso houver mais comida
             for food in oldFood:
-                newFood_distancia.append((manhattanDistance(newPos, food), food))
+                newFood_distance.append((manhattanDistance(newPos, food), food))
 
+            perto_food = min(newFodd_distance)
 
+        if manhattanDistance(newPos, closest_food[1]) < manhattanDistance(oldPos, closest_food[1]):
+            score += 40
+        return score
         
 
         return successorGameState.getScore()
