@@ -109,7 +109,8 @@ class ReflexAgent(Agent):
             perto_food = min(newFood_distance) # comida mas perto do pacman
             print(perto_food)
 
-        if manhattanDistance(newPos, closest_food[1]) < manhattanDistance(oldPos, closest_food[1]):
+        if manhattanDistance(newPos, perto_food[1]) < manhattanDistance(oldPos, perto_food[1]):
+            # se a proxima acao ficar mas perto da comida
             score += 40
         return score
         
