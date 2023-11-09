@@ -73,13 +73,34 @@ class ReflexAgent(Agent):
         successorGameState = currentGameState.generatePacmanSuccessor(action)
         newPos = successorGameState.getPacmanPosition()
         newFood = successorGameState.getFood()
+        newGhostPositions = successorGameState.getGhostPositions()
         newGhostStates = successorGameState.getGhostStates()
         newScaredTimes = [ghostState.scaredTimer for ghostState in newGhostStates]
 
         "*** YOUR CODE HERE ***"
         oldPos = currentGameState.getPacmanPosition() # obter posiçao do pacman
-        oldFood = currentGameState.getFood().asList() #obter lista 
-        print(oldFood)
+        oldFood = currentGameState.getFood().asList() #obter lista das coordenadas das comidas atuais
+        #print(oldFood)
+
+        score = 0
+
+        # distancia entre meu pacman e os ghosts:
+        for ghost_pos in newGhostPositions:
+            if manhattanDistance(newPos, ghost_pos) == 2:
+                # se essa distancia for igual a 2, reduzir o score em 5000
+                score -= 5000
+                return score
+            
+        if newPos in oldFood: 
+            score += 50
+
+        if oldPos == newPos:
+            score -= 20
+
+        newFood_distancia = []
+        if len(oldFood) > 0:
+            for food in oldFood:
+                newFood_distancia.append((manhattanDistance(newPos, food), food))
 
 
         
