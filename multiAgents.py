@@ -107,15 +107,14 @@ class ReflexAgent(Agent):
                 newFood_distance.append((manhattanDistance(newPos, food), food)) # tupla (distancia, coordenada da comida)
 
             perto_food = min(newFood_distance) # comida mas perto do pacman
-            print(perto_food)
+            #print(perto_food)
 
         if manhattanDistance(newPos, perto_food[1]) < manhattanDistance(oldPos, perto_food[1]):
-            # se a proxima acao ficar mas perto da comida
+            # se a proxima acao ficar mas perto da comida, aumentar o score 
             score += 40
-        return score
         
-
-        return successorGameState.getScore()
+        
+        return score
 
 def scoreEvaluationFunction(currentGameState: GameState):
     """
