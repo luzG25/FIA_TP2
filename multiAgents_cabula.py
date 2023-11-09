@@ -95,9 +95,7 @@ class ReflexAgent(Agent):
           for food in oldFood:
             newFood_distance.append((manhattanDistance(newPos, food), food))
           closest_food = min(newFood_distance)
-          if manhattanDistance(newPos, closest_food[1]) < manhattanDistance(oldPos, closest_food[1]):
-            score += 40
-        return score
+          
 
 def scoreEvaluationFunction(currentGameState):
     """
