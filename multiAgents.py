@@ -155,17 +155,17 @@ class MinimaxAgent(MultiAgentSearchAgent):
             profundidade += 1
             jogadorIndex = 0
             
-            if(profundidade == self.depth or gameState.isWin() or gameState.isLose()):
-                # caso seja alcançada a fundo (depth 0) ou o jogo esta ganho ou perdido
-                #avaliar esta possivel estado
-                return self.evaluationFunction(gameState)
-            
-            # se o jogador for o pacman
-            if jogadorIndex == 0:
-                return self.maxValue(gameState, jogadorIndex, profundidade)
-            # se o jogador for o ghost
-            else:
-                return self.minValue(gameState, jogadorIndex, profundidade)
+        if(profundidade == self.depth or gameState.isWin() or gameState.isLose()):
+            # caso seja alcançada a fundo (depth 0) ou o jogo esta ganho ou perdido
+            #avaliar esta possivel estado
+            return self.evaluationFunction(gameState)
+        
+        # se o jogador for o pacman
+        if jogadorIndex == 0:
+            return self.maxValue(gameState, jogadorIndex, profundidade)
+        # se o jogador for o ghost
+        else:
+            return self.minValue(gameState, jogadorIndex, profundidade)
             
     # determinar o maximo valor
     #aplicado para as jogadas do pacman        
@@ -181,7 +181,8 @@ class MinimaxAgent(MultiAgentSearchAgent):
             successorGameState = gameState.generateSuccessor(jogadorIndex,acao)
             
             val = max(val,self.minimax(successorGameState,jogadorIndex + 1, profundidade))
-            return val
+        
+        return val
             
     def minValue(self,gameState,jogadorIndex,profundidade):
         val = float("inf") # definir o val para o maior valor possivel
@@ -191,7 +192,8 @@ class MinimaxAgent(MultiAgentSearchAgent):
         for action in legalActions:
             successorGameState = gameState.generateSuccessor(jogadorIndex,action)
             val = min(val,self.minimax(successorGameState,jogadorIndex + 1, profundidade))
-            return val
+        
+        return val
             
         
 
@@ -226,6 +228,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         for acao in legalAction:
             sucessorGameState = gameState.generateSuccessor(jogadorIndex, acao)
             val = self.minimax(sucessorGameState, 1, 0)
+            print(val)
            
            # comparar as ações, até encontrar a  jogada que possui a o maior valor evalution 
             if val > max_value: 
