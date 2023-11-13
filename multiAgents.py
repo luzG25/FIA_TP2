@@ -150,6 +150,50 @@ class MinimaxAgent(MultiAgentSearchAgent):
     """
     Your minimax agent (question 2)
     """
+    def minimax(self, gameState, jogadorIndex, profundidade):
+        if jogadorIndex >= gameState.getNumAgents(): 
+            profundidade += 1
+            jogadorIndex = 0
+            
+            if(profundidade == self.depth or gameState.isWin() or gameState.isLose()):
+                # caso seja alcançada a fundo (depth 0) ou o jogo esta ganho ou perdido
+                #avaliar esta possivel estado
+                return self.evaluationFunction(gameState)
+            
+            # se o jogador for o pacman
+            if jogadorIndex == 0:
+                return self.maxValue(gameState, jogadorIndex, profundidade)
+            # se o jogador for o ghost
+            else:
+                return self.minValue(gameState, jogadorIndex, profundidade)
+            
+    # determinar o maximo valor
+    #aplicado para as jogadas do pacman        
+    def maxValue(self, gameState, jogadorIndex, profundidade):
+        val = -float("inf") # definir o val para o menor valor possivel
+        
+        #ver as possiveis jogadas legais do pacman, ex: se ele pode ir para esquerda, frente ou trás,
+        #se ele esta com uma parede do lado esquerdo certamente 'esquerda' não é uma jogada legal
+        legalActions = gameState.getLegalActions(jogadorIndex) 
+        for acao in legalActions:
+            
+            # gerar a proximo estado do jogo caso o pacman resolver tomar essa determinada ação
+            successorGameState = gameState.generateSuccessor(jogadorIndex,acao)
+            
+            val = max(val,self.minimax(successorGameState,jogadorIndex + 1, profundidade))
+            return val
+            
+    def minValue(self,gameState,jogadorIndex,profundidade):
+        val = float("inf") # definir o val para o maior valor possivel
+        
+        # gerar a proximo estado do jogo caso o pacman resolver tomar essa determinada ação
+        legalActions = gameState.getLegalActions(jogadorIndex)
+        for action in legalActions:
+            successorGameState = gameState.generateSuccessor(jogadorIndex,action)
+            val = min(val,self.minimax(successorGameState,jogadorIndex + 1, profundidade))
+            return val
+            
+        
 
     def getAction(self, gameState: GameState):
         """
@@ -175,7 +219,21 @@ class MinimaxAgent(MultiAgentSearchAgent):
         Returns whether or not the game state is a losing state
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        jogadorIndex = 0 # referenciando o pacman
+        max_value = -float("inf")
+        legalAction = gameState.getLegalActions(jogadorIndex)
+        
+        for acao in legalAction:
+            sucessorGameState = gameState.generateSuccessor(jogadorIndex, acao)
+            val = self.minimax(sucessorGameState, 1, 0)
+           
+           # comparar as ações, até encontrar a  jogada que possui a o maior valor evalution 
+            if val > max_value: 
+                max_value = val
+                melhor_acao = acao
+                
+        return melhor_acao 
+            
 
 class AlphaBetaAgent(MultiAgentSearchAgent):
     """
