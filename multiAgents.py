@@ -18,6 +18,7 @@ import random, util
 
 from game import Agent
 from pacman import GameState
+from math import inf
 
 class ReflexAgent(Agent):
     """
@@ -170,7 +171,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
     # determinar o maximo valor
     #aplicado para as jogadas do pacman        
     def maxValue(self, gameState, jogadorIndex, profundidade):
-        val = -float("inf") # definir o val para o menor valor possivel
+        val = -inf # definir o val para o menor valor possivel
         
         #ver as possiveis jogadas legais do pacman, ex: se ele pode ir para esquerda, frente ou trás,
         #se ele esta com uma parede do lado esquerdo certamente 'esquerda' não é uma jogada legal
@@ -185,9 +186,9 @@ class MinimaxAgent(MultiAgentSearchAgent):
         return val
             
     def minValue(self,gameState,jogadorIndex,profundidade):
-        val = float("inf") # definir o val para o maior valor possivel
+        val = inf # definir o val para o maior valor possivel
         
-        # gerar a proximo estado do jogo caso o pacman resolver tomar essa determinada ação
+        # gerar a proximo estado do jogo caso o ghost resolver tomar essa determinada ação
         legalActions = gameState.getLegalActions(jogadorIndex)
         for action in legalActions:
             successorGameState = gameState.generateSuccessor(jogadorIndex,action)
@@ -222,7 +223,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
         """
         "*** YOUR CODE HERE ***"
         jogadorIndex = 0 # referenciando o pacman
-        max_value = -float("inf")
+        max_value = -inf
         legalAction = gameState.getLegalActions(jogadorIndex)
         
         for acao in legalAction:
@@ -242,13 +243,72 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     """
     Your minimax agent with alpha-beta pruning (question 3)
     """
+    def alpha_beta(self, gameState, alpha, beta, jogadorIndex, profundidade):
+        if jogadorIndex >= gameState.getNumAgents(): 
+            profundidade += 1
+            jogadorIndex = 0
+            
+        if(profundidade == self.depth or gameState.isWin() or gameState.isLose()):
+            # caso seja alcançada a fundo (depth 0) ou o jogo esta ganho ou perdido
+            #avaliar esta possivel estado
+            return self.evaluationFunction(gameState)
+        
+        # se o jogador for o pacman
+        if jogadorIndex == 0:
+            return self.maxValue(gameState, alpha, beta, jogadorIndex, profundidade)
+        # se o jogador for o ghost
+        else:
+            return self.minValue(gameState, alpha, beta, jogadorIndex, profundidade)
+        
+        
+    
+    def maxValue(self, gameState, alpha, beta, jogadorIndex, profundidade):
+        v = -inf
+        
+        for acao in  gameState.getLegalActions(jogadorIndex):
+            proxima_jogada = gameState.generateSuccessor(jogadorIndex, acao)
+            v = max(v, self.alpha_beta(proxima_jogada, alpha, beta, jogadorIndex+1, profundidade))
+            
+            if v > beta:
+                return v
+            
+            alpha = max(alpha, v)
+        return v
+        
+        
+    def minValue(self, gameState, alpha, beta, jogadorIndex, profundidade):
+        v =  inf
+        
+        for acao in  gameState.getLegalActions(jogadorIndex):
+            proxima_jogada = gameState.generateSuccessor(jogadorIndex, acao)
+            v = min(v, self.alpha_beta(proxima_jogada, alpha, beta, jogadorIndex+1, profundidade))
+            
+            if v < alpha:
+                return v
+            
+            beta = min(beta, v)
+        
+        return v
+    
+
 
     def getAction(self, gameState: GameState):
         """
         Returns the minimax action using self.depth and self.evaluationFunction
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        jogadorIndex = 0
+        alpha = -inf
+        beta = inf
+        
+        for acao in gameState.getLegalActions(jogadorIndex):
+            proximaJogada = gameState.generateSuccessor(jogadorIndex, acao)
+            v = self.alpha_beta(proximaJogada, alpha, beta, 1, 0)
+            
+            if v > alpha:
+                alpha = v
+                proxima_acao = acao
+                
+        return proxima_acao
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
     """
