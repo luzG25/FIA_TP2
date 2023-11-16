@@ -417,7 +417,7 @@ def betterEvaluationFunction(currentGameState: GameState):
 
     ghosts_coor = currentGameState.getGhostPositions() # obter a posicao dos ghosts no tabuleiro
     dist_pac_ghost = manhattanDistance(pacman_coor, ghosts_coor[0]) # distancia entre o pacman e ghost mais perto
-    if dist_pac_ghost < 3:
+    if dist_pac_ghost < 15:
         score -= dist_pac_ghost * 10 # reduzir a pontuacao se a distancia entre o ghost e o pacman for menor que 3
 
     return (score + 100 * currentGameState.getScore()) 
