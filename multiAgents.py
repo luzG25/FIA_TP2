@@ -407,8 +407,8 @@ def betterEvaluationFunction(currentGameState: GameState):
 
     n_dots = len(dots_distancia) # numero de dots disponiveis no jogo
     if n_dots > 0:
-        score +=  5 * 1.0/min(dots_distancia) # aumentar o score em 5pts para o dot mais pero
-        score +=  1.0/n_dots # aumentar o score inversamente em relacao ao numero de  dots no jogo
+        score +=  100 * 1.0/min(dots_distancia) # aumentar o score em 5pts para o dot mais pero
+        score +=  100 * 1.0/n_dots # aumentar o score inversamente em relacao ao numero de  dots no jogo
 
     # para quando o modo em que o ghost vira presa
     for estado in currentGameState.getGhostStates():
