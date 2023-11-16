@@ -395,30 +395,32 @@ def betterEvaluationFunction(currentGameState: GameState):
     """
     "*** YOUR CODE HERE ***"
     
-    dots = currentGameState.getFood().asList()
-    dots_distancia = []
-    pacman_coor = currentGameState.getPacmanPosition()
+    dots = currentGameState.getFood().asList() # lista de todos os dots disponivel no tabuleiro para o pacman comer
+    dots_distancia = [] # distancia respectiva de cada dot no jogo em  relacao ao pacman
+    pacman_coor = currentGameState.getPacmanPosition() # coordenada do pacman no tabuleiro
     
     score  = 0
     
     for dot in dots:
+        # popular a lista para cada dot, com a manhattanDistance entre o pacman e o dot
         dots_distancia.append(manhattanDistance(pacman_coor, dot))
 
-    n_dots = len(dots_distancia)
+    n_dots = len(dots_distancia) # numero de dots disponiveis no jogo
     if n_dots > 0:
-        score +=  20 * 1.0/min(dots_distancia)
-        score += 10 * 1.0/n_dots
+        score +=  5 * 1.0/min(dots_distancia) # aumentar o score em 5pts para o dot mais pero
+        score +=  1.0/n_dots # aumentar o score inversamente em relacao ao numero de  dots no jogo
 
+    # para quando o modo em que o ghost vira presa
     for estado in currentGameState.getGhostStates():
-        score += 10 * estado.scaredTimer
+        score += 2 * estado.scaredTimer # aumentar o score em 2vezes em relacao ao tempo que esta em modo presa
 
 
-    ghosts_coor = currentGameState.getGhostPositions()
-    dist_pac_ghost = manhattanDistance(pacman_coor, ghosts_coor[0])
+    ghosts_coor = currentGameState.getGhostPositions() # obter a posicao dos ghosts no tabuleiro
+    dist_pac_ghost = manhattanDistance(pacman_coor, ghosts_coor[0]) # distancia entre o pacman e ghost mais perto
     if dist_pac_ghost < 3:
-        score -= dist_pac_ghost * 100
+        score -= dist_pac_ghost * 10 # reduzir a pontuacao se a distancia entre o ghost e o pacman for menir que 3
 
-    return (score + 100 * currentGameState.getScore())
+    return (score + 100 * currentGameState.getScore()) 
     
 
 # Abbreviation
