@@ -395,8 +395,31 @@ def betterEvaluationFunction(currentGameState: GameState):
     """
     "*** YOUR CODE HERE ***"
     
+    dots = currentGameState.getFood().asList()
+    dots_distancia = []
+    pacman_coor = currentGameState.getPacmanPosition()
     
-    util.raiseNotDefined()
+    score  = 0
+    
+    for dot in dots:
+        dots_distancia.append(manhattanDistance(pacman_coor, dot))
+
+    n_dots = len(dots_distancia)
+    if n_dots > 0:
+        score +=  20 * 1.0/min(dots_distancia)
+        score += 10 * 1.0/n_dots
+
+    for estado in currentGameState.getGhostStates():
+        score += 10 * estado.scaredTimer
+
+
+    ghosts_coor = currentGameState.getGhostPositions()
+    dist_pac_ghost = manhattanDistance(pacman_coor, ghosts_coor[0])
+    if dist_pac_ghost < 3:
+        score -= dist_pac_ghost * 100
+
+    return (score + 100 * currentGameState.getScore())
+    
 
 # Abbreviation
 better = betterEvaluationFunction
